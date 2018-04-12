@@ -154,6 +154,7 @@ void AliJEventPool::AcceptList(TClonesArray *inList, float cent, float Z, float 
     fmult      [cBin][fwhereToStore[cBin]] = inMult;
 
     fLists[cBin][fwhereToStore[cBin]]->Clear();
+/*
     for(int i=0;i<inList->GetEntriesFast();i++){
 				if( fthisPoolType == kJPhoton || fthisPoolType == kJDecayphoton ){
 					AliJPhoton *tkp = (AliJPhoton*)inList->At(i);
@@ -172,6 +173,7 @@ void AliJEventPool::AcceptList(TClonesArray *inList, float cent, float Z, float 
 					new ((*fLists[cBin][fwhereToStore[cBin]])[i]) AliJTrack(*tk3);
 				}
     }
+*/
 
 }
 

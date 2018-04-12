@@ -32,11 +32,11 @@
 #include "../AliJEfficiency.h"
 //#include <iostream>
 
-ClassImp(AliJIaaAna)
+//ClassImp(AliJIaaAna)
 
 //----------------------------------------------------------------------------------------------------------------------------
 AliJIaaAna::AliJIaaAna() :
-	TObject(),
+//	TObject(),
 	fFirstEvent(kTRUE),
 	fRunNumber(-999),
 	fcent(-999),
@@ -71,7 +71,7 @@ AliJIaaAna::AliJIaaAna() :
 
 //----------------------------------------------------------------------------------------------------------------------------
 AliJIaaAna::AliJIaaAna(Bool_t execLocal) :
-	TObject(),
+//	TObject(),
 	fFirstEvent(kTRUE),
 	fRunNumber(-999),
 	fcent(-999),
@@ -122,7 +122,7 @@ AliJIaaAna::~AliJIaaAna(){
 
 //----------------------------------------------------------------------------------------------------------------------------
 AliJIaaAna::AliJIaaAna(const AliJIaaAna& obj) :
-	TObject(),
+//	TObject(),
 	fFirstEvent(obj.fFirstEvent),
 	fRunNumber(obj.fRunNumber),
 	fcent(obj.fcent),
@@ -153,14 +153,14 @@ AliJIaaAna::AliJIaaAna(const AliJIaaAna& obj) :
 	fHadronSelectionCut(obj.fHadronSelectionCut)
 {
 	// copy constructor
-	JUNUSED(obj);
+	//JUNUSED(obj);
 }
 
 //----------------------------------------------------------------------------------------------------------------------------
 AliJIaaAna& AliJIaaAna::operator=(const AliJIaaAna& obj){
 //----------------------------------------------------------------------------------------------------------------------------
 	// equal sign operator
-	JUNUSED(obj);
+	//JUNUSED(obj);
 	return *this;
 }
 
