@@ -48,7 +48,7 @@ export iseg=\$SLURM_ARRAY_TASK_ID
 sedN=\`expr \$sedN + \${iseg}\`
 export outfile=$Out_DIR/$DoWhat-\$sedN.root
 export Log=$LOG_DIR/$DoWhat-\$sedN.log
-./\${what} \$outfile \$sedN 100000 $pyconfigname $cardname  >& \$Log
+./\${what} \$outfile \$sedN 1000000 $pyconfigname $cardname  >& \$Log
 cd $Main_DIR
 EOF
 #\${what} \$outfile \$sedN 5000000 >& \$Log
