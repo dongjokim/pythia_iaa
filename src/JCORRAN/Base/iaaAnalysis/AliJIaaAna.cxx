@@ -231,8 +231,8 @@ void AliJIaaAna::UserCreateOutputObjects(){
 	// EventPool for Mixing
 	fassocPool   = new AliJEventPool( fcard, fhistos, fcorrelations, fjassoc);
 
-	ftriggList  = new TClonesArray(kParticleProtoType[fjtrigg],1500);
-	fassocList  = new TClonesArray(kParticleProtoType[fjassoc],1500);
+	ftriggList  = new TClonesArray(kParticleBasicProtoType[fjtrigg],1500);
+	fassocList  = new TClonesArray(kParticleBasicProtoType[fjassoc],1500);
 	finputList = NULL;
 
 	// RunHeader was set from the task macro
