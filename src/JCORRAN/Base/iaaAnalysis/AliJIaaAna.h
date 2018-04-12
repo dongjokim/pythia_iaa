@@ -24,7 +24,7 @@ class TF1;
 class AliJRunTable;
 class TRandom3;
 
-class AliJIaaAna : public TObject
+class AliJIaaAna // : public TObject
 {
 public:
 	AliJIaaAna(); // Default contructor
@@ -103,7 +103,7 @@ private:
 	AliJRunTable *fRunTable; // Run table
 	int fHadronSelectionCut; // Used hadron selection cut
 
-	ClassDef(AliJIaaAna, 1); // ClassDef needed if inheriting from TObject
+//	ClassDef(AliJIaaAna, 1); // ClassDef needed if inheriting from TObject
 
 };
 
