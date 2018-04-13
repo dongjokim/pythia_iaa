@@ -92,7 +92,7 @@ int main(int argc, char **argv) {
         fIaaAna->SetTrigger((char*)"hadron");
         fIaaAna->SetAssoc((char*)"hadron");
         fIaaAna->UserCreateOutputObjects();
-        fIaaAna->GetCard()->WriteCard(fout);
+        fIaaAna->GetCard()->WriteCard(fout->GetDirectory("JCIaa"));
 	// ========================================================
 	double etaMaxCutForPart = 0.8;
 
