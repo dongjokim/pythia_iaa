@@ -30,11 +30,12 @@ int main(int argc, char **argv) {
 	char *outFile;
 	outFile   = argv[1];
 	int randomseed = atoi(argv[2]);
-	int Nevt = atoi(argv[3]);;
+	int Nevt = atoi(argv[3]);
 
 	//PYTHIA 8-------------------------------------------
 	char* pythiaconfig  = argv[4];
 	char* cardName   = argv[5];
+	int GluonFiltering= atoi(argv[6]);
 
 	cout <<"Setting ....." << endl;
 	//---------------------
@@ -67,14 +68,6 @@ int main(int argc, char **argv) {
 
 	TStopwatch timer;
 	timer.Start();
-	// Gluon Filtering part
-	JHistos *histos = new JHistos();
-	histos->CreateToyHistos();
-	JParticleTools *ptool  = new JParticleTools(event, histos);
-
-	TClonesArray *inputList;
-
-	inputList = new TClonesArray("AliJBaseTrack", 1500 );
 
 	// Booking need histos & variables
 	// same as UserCreateOutputObjects()
@@ -90,6 +83,10 @@ int main(int argc, char **argv) {
 	card->PrintOut();
 
 	// === Create analysis object ===
+	// Gluon Filtering part
+	JHistos *histos = new JHistos();
+	histos->CreateToyHistos();
+	JParticleTools *ptool  = new JParticleTools(event, histos);
 
 	AliJIaaAna *fIaaAna;
 	fIaaAna = new AliJIaaAna( kFALSE );
@@ -105,40 +102,20 @@ int main(int argc, char **argv) {
 	int ieout = Nevt/20;
 	if (ieout<1) ieout=1;
 	int EventCounter = 0;
-	int collType = 0, GluonFiltering=1;
 
 	for(int ievt=0; ievt<Nevt; ievt++){
-		inputList->Clear();
 		ptool->InitializeEvent();
 		if (!pythia.next()) continue;
 		if(ievt % ieout == 0) cout << ievt << "\t" << int(float(ievt)/Nevt*100) << "%" << endl ;
 		//Start Analysis ==========================================
 		// Add Particles from pythia
 		ptool->GetParticles(GluonFiltering);
-		TClonesArray *fGFlist = ptool->GetInputList();
+		TClonesArray *inputList = ptool->GetInputList();
 		
-		int Nch_pthia = 0;
-		for (int i = 0; i < pythia.event.size(); ++i) {//loop over all the particles in the event
-			if( pythia.event[i].isFinal() && TMath::Abs(pythia.event[i].eta()) < etaMaxCutForPart && pythia.event[i].isCharged() && pythia.event[i].isHadron() )
-			{
-				TLorentzVector lvparticle(pythia.event[i].px(), pythia.event[i].py(), pythia.event[i].pz(), pythia.event[i].e());
-				AliJBaseTrack track( lvparticle );
-				track.SetID(pythia.event[i].id());
-				track.SetParticleType(kJHadron);
-				track.SetTrackEff(1.);
-				new ( (*inputList)[inputList->GetEntriesFast()] ) AliJBaseTrack(track);
-				Nch_pthia++;
-			}
-		}
-		cout << "Normal Ntrk = "<< inputList->GetEntriesFast() <<"\t GluonFliterd Ntrk = "<< fGFlist->GetEntriesFast()<<endl;
-
-		//cout << "Nch from pythia = "<< Nch_pthia << endl;
-		//cout << "Total = "<< inputList->GetEntriesFast() << endl;
-
-		//
+		//cout << "Normal Ntrk = "<< inputList->GetEntriesFast() <<endl; //too low ???
+		
 		fIaaAna->Init();
 		fIaaAna->SetTrackList(inputList);
-		//cout <<"fIaaAna::"<< fIaaAna->GetInputList()->GetEntriesFast() << endl;
 		fIaaAna->SetRunNumber(0);
 		fIaaAna->SetCentrality(1);
 		fIaaAna->SetZVertex(0.);
