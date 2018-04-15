@@ -32,6 +32,9 @@ HDRS	+= $(HDRSDICT)	src/JCORRAN/Base/AliJRunTable.h \
 			src/JCORRAN/Base/iaaAnalysis/AliJIaaHistograms.h \
 			src/JCORRAN/Base/iaaAnalysis/AliJIaaCorrelations.h \
 			src/JCORRAN/Base/iaaAnalysis/AliJIaaAna.h \
+			src/psrc/JCard.h \
+			src/psrc/JHistos.h \
+			src/psrc/JParticleTools.h \
                         nanoDict.h
 
 
