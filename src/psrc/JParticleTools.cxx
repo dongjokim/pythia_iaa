@@ -96,6 +96,11 @@ void JParticleTools::GetParticles( int filtering ){
 	    if(random > RAA) return;
 	    }
 	     */
+	    AliJBaseTrack track( lvParticle );
+	    track.SetID(event[partIdx].id());
+	    track.SetParticleType(kJHadron);
+	    track.SetTrackEff(1.);
+	    new((*fInputList)[fInputList->GetEntriesFast()]) AliJBaseTrack(track);
 	}
 
 	// charge pion +-211

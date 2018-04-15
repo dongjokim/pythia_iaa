@@ -115,6 +115,8 @@ int main(int argc, char **argv) {
 		//Start Analysis ==========================================
 		// Add Particles from pythia
 		ptool->GetParticles(GluonFiltering);
+		TClonesArray *fGFlist = ptool->GetInputList();
+		
 		int Nch_pthia = 0;
 		for (int i = 0; i < pythia.event.size(); ++i) {//loop over all the particles in the event
 			if( pythia.event[i].isFinal() && TMath::Abs(pythia.event[i].eta()) < etaMaxCutForPart && pythia.event[i].isCharged() && pythia.event[i].isHadron() )
@@ -128,6 +130,7 @@ int main(int argc, char **argv) {
 				Nch_pthia++;
 			}
 		}
+		cout << "Normal Ntrk = "<< inputList->GetEntriesFast() <<"\t GluonFliterd Ntrk = "<< fGFlist->GetEntriesFast()<<endl;
 
 		//cout << "Nch from pythia = "<< Nch_pthia << endl;
 		//cout << "Total = "<< inputList->GetEntriesFast() << endl;

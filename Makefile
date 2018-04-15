@@ -1,4 +1,4 @@
-PROGRAM       = JCIaa
+PROGRAM       = JCIaaGF
 
 version       = JTKT
 CXX           = g++

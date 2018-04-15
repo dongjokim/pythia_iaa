@@ -1,7 +1,6 @@
 //===========================================================
 // JParticleTools.h
-//	 Created  Sun Jun 19 12:14:10 CEST 2011  by classmaker
-//	 Jan Rak
+// DongJo Kim (dong.jo.kim@cern.ch)
 //===========================================================
 
 #ifndef JPARTICLETOOLS_H
@@ -18,6 +17,7 @@
 #include "TClonesArray.h"
 #include "TRandom3.h"
 
+#include "../JCORRAN/Base/AliJBaseTrack.h"
 #include "JHistos.h"
 #include "set"
 #include "map"
@@ -27,31 +27,35 @@ using namespace Pythia8;
 
 class JParticleTools {
 
-    public:
+	public:
 
-        JParticleTools (Event &inevent, JHistos *inhistos): 
-            event(inevent),
-            histos(inhistos){
+		JParticleTools (Event &inevent, JHistos *inhistos): 
+			event(inevent),
+			histos(inhistos){
 
-                unif = new TRandom3();
-                TrackEtaRange = 0.8;
-            }
+				unif = new TRandom3();
+				fInputList = new TClonesArray("AliJBaseTrack", 1500 );
+				TrackEtaRange = 0.8;
+			}
 
-        void InitializeEvent(){
-            UniqueID=0;
-        }
+		void InitializeEvent(){
+			fInputList->Clear();
+			UniqueID=0;
+		}
 
-        void GetParticles(int = 0);
+		void GetParticles(int = 0);
+		TClonesArray * GetInputList() const{return fInputList;}
 
-        TRandom3 *unif;
+		TRandom3 *unif;
 
-        int UniqueID;
-        TLorentzVector lvParticle;
+		int UniqueID;
+		TLorentzVector lvParticle;
+		TClonesArray *fInputList;  // tracklist
 
-        Event &event;
-        JHistos *histos;
+		Event &event;
+		JHistos *histos;
 
-        double TrackEtaRange ;
+		double TrackEtaRange ;
 
 };
 
