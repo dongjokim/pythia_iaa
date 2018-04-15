@@ -9,6 +9,8 @@
 #include "src/JCORRAN/Base/iaaAnalysis/AliJIaaAna.h"
 #include <Pythia8/Pythia.h>
 #include <TStopwatch.h>
+#include "src/psrc/JHistos.h"
+#include "src/psrc/JParticleTools.h"
 
 // Configuration for Toy MC track generation //
 using namespace std;
@@ -39,7 +41,7 @@ int main(int argc, char **argv) {
 	//Pythia initialization
 	//---------------------
 	Pythia pythia;   // Generator.
-	//Event& event      = pythia.event;
+	Event& event      = pythia.event;
 	ParticleData& pdt = pythia.particleData;
 
 	// Read in commands from external file.
@@ -65,6 +67,10 @@ int main(int argc, char **argv) {
 
 	TStopwatch timer;
 	timer.Start();
+	// Gluon Filtering part
+	JHistos *histos = new JHistos();
+	histos->CreateToyHistos();
+	JParticleTools *ptool  = new JParticleTools(event, histos);
 
 	TClonesArray *inputList;
 
@@ -76,36 +82,39 @@ int main(int argc, char **argv) {
 	fout->mkdir("JCIaa");
 	fout->cd("JCIaa");
 
-       // === Set up JCard ====
-        AliJCard *card = new AliJCard(cardName);
-        card->PrintOut();
-        //card->ReadLine( cardSetting.Data() );
-        //card->ReCompile();
-        card->PrintOut();
+	// === Set up JCard ====
+	AliJCard *card = new AliJCard(cardName);
+	card->PrintOut();
+	//card->ReadLine( cardSetting.Data() );
+	//card->ReCompile();
+	card->PrintOut();
 
-  // === Create analysis object ===
+	// === Create analysis object ===
 
-        AliJIaaAna *fIaaAna;
-        fIaaAna = new AliJIaaAna( kFALSE );
+	AliJIaaAna *fIaaAna;
+	fIaaAna = new AliJIaaAna( kFALSE );
 
-        fIaaAna->SetCard( card );
-        fIaaAna->SetTrigger((char*)"hadron");
-        fIaaAna->SetAssoc((char*)"hadron");
-        fIaaAna->UserCreateOutputObjects();
-        fIaaAna->GetCard()->WriteCard(fout->GetDirectory("JCIaa"));
+	fIaaAna->SetCard( card );
+	fIaaAna->SetTrigger((char*)"hadron");
+	fIaaAna->SetAssoc((char*)"hadron");
+	fIaaAna->UserCreateOutputObjects();
+	fIaaAna->GetCard()->WriteCard(fout->GetDirectory("JCIaa"));
 	// ========================================================
 	double etaMaxCutForPart = 0.8;
 
 	int ieout = Nevt/20;
 	if (ieout<1) ieout=1;
 	int EventCounter = 0;
+	int collType = 0, GluonFiltering=1;
 
 	for(int ievt=0; ievt<Nevt; ievt++){
 		inputList->Clear();
+		ptool->InitializeEvent();
 		if (!pythia.next()) continue;
 		if(ievt % ieout == 0) cout << ievt << "\t" << int(float(ievt)/Nevt*100) << "%" << endl ;
 		//Start Analysis ==========================================
 		// Add Particles from pythia
+		ptool->GetParticles(GluonFiltering);
 		int Nch_pthia = 0;
 		for (int i = 0; i < pythia.event.size(); ++i) {//loop over all the particles in the event
 			if( pythia.event[i].isFinal() && TMath::Abs(pythia.event[i].eta()) < etaMaxCutForPart && pythia.event[i].isCharged() && pythia.event[i].isHadron() )

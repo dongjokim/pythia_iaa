@@ -18,7 +18,6 @@
 #include "TClonesArray.h"
 #include "TRandom3.h"
 
-#include "JCard.h"
 #include "JHistos.h"
 #include "set"
 #include "map"
@@ -30,20 +29,15 @@ class JParticleTools {
 
     public:
 
-        JParticleTools (Event &inevent, JCard *incard, JHistos *inhistos): 
-            triggList("TLorentzVector"), 
-            assocList("TLorentzVector"), 
+        JParticleTools (Event &inevent, JHistos *inhistos): 
             event(inevent),
-            card(incard), 
             histos(inhistos){
 
                 unif = new TRandom3();
-                TrackEtaRange = card->Get("EtaRange");
+                TrackEtaRange = 0.8;
             }
 
         void InitializeEvent(){
-            triggList.Clear();
-            assocList.Clear();
             UniqueID=0;
         }
 
@@ -51,15 +45,12 @@ class JParticleTools {
 
         TRandom3 *unif;
 
-        TClonesArray triggList, assocList;
         int UniqueID;
         TLorentzVector lvParticle;
 
         Event &event;
-        JCard *card;
         JHistos *histos;
 
-        int pTtBin, pTaBin;
         double TrackEtaRange ;
 
 };

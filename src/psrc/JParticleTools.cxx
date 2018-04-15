@@ -15,11 +15,9 @@ void JParticleTools::GetParticles( int filtering ){
         if( !event[partIdx].isFinal() || !event[partIdx].isCharged() || !event[partIdx].isHadron() ) continue;
         if(event[partIdx].vProd().pAbs()>1.0) continue; //production vertex >1.0mm to reject secondaries. 
 
-        pTtBin = card->GetBin(kTriggType, event[partIdx].pT() );
-        pTaBin = card->GetBin(kAssocType, event[partIdx].pT() );
         double trEta = event[partIdx].eta();
         //cout<< "pTt=" << pTtBin <<" pTa="<<pTaBin <<endl;  
-        if( (pTtBin<0 && pTaBin<0) || fabs(trEta)>TrackEtaRange ) continue;
+        if( fabs(trEta)>TrackEtaRange ) continue;
 
         lvParticle.SetPxPyPzE(event[partIdx].px(), event[partIdx].py(), event[partIdx].pz(), event[partIdx].e() );
         lvParticle.SetUniqueID(UniqueID++);
@@ -57,67 +55,56 @@ void JParticleTools::GetParticles( int filtering ){
                 double pTPart = lvParticle.Pt();
                 TLorentzVector parton23(event[indexParton23].px(), event[indexParton23].py(), event[indexParton23].pz(), event[indexParton23].e());
                 double pT23   = parton23.Pt();
-                double pT71   = parton71.Pt();
-                int pTBin23 = card->GetBin(kTriggType, pT23 );
-                if(pTBin23>=0){
-                    double dr = parton71.DeltaR(parton23);
-                    if(dr<DeltaR){
-                        histos->h71from23[pTBin23]->Fill(pT71/pT23);
-                        //double dphi   = DeltaPhiX( parton71.DeltaPhi(parton23) )/kJPi;
-                        //histos->hdPhi71from23[pTBin23]->Fill(dphi);
-                    }
-                }
+		double pT71   = parton71.Pt();
+		double dr = parton71.DeltaR(parton23);
 
-                if(event[indexParton23].id() == 21){
-                    histos->hGluonJet->Fill(pTPart); 
-                    histos->hGluonJet23->Fill(pT23); 
-                } else {
-                    histos->hQuarkJet->Fill(pTPart); 
-                    histos->hQuarkJet23->Fill(pT23); 
-                }
-                bool bGG = (event[5].id() == 21 && event[6].id() == 21);
-                bool bQQ = (event[5].id() != 21 && event[6].id() != 21);
-                if(bGG){
-                    histos->hGG->Fill(pTPart);
-                    histos->hGG23->Fill(pT23);
-                } else if(bQQ){
-                    histos->hQQ->Fill(pTPart);
-                    histos->hQQ23->Fill(pT23);
-                } else if(!bGG && !bQQ){
-                    histos->hQG->Fill(pTPart);
-                    histos->hQG23->Fill(pT23);
-                }
-            }
+		if(event[indexParton23].id() == 21){
+			histos->hGluonJet->Fill(pTPart); 
+			histos->hGluonJet23->Fill(pT23); 
+		} else {
+			histos->hQuarkJet->Fill(pTPart); 
+			histos->hQuarkJet23->Fill(pT23); 
+		}
+		bool bGG = (event[5].id() == 21 && event[6].id() == 21);
+		bool bQQ = (event[5].id() != 21 && event[6].id() != 21);
+		if(bGG){
+			histos->hGG->Fill(pTPart);
+			histos->hGG23->Fill(pT23);
+		} else if(bQQ){
+			histos->hQQ->Fill(pTPart);
+			histos->hQQ23->Fill(pT23);
+		} else if(!bGG && !bQQ){
+			histos->hQG->Fill(pTPart);
+			histos->hQG23->Fill(pT23);
+		}
+	    }
 
-            // kill all gluons (gluon=21)
-            if( event[indexParton23].statusAbs() != 23 || event[indexParton23].id() == 21) continue;
+	    // kill all gluons (gluon=21)
+	    if( event[indexParton23].statusAbs() != 23 || event[indexParton23].id() == 21) continue;
 
-            // kill all quarks
-            //if( event[indexParton23].statusAbs() != 23 || event[indexParton23].id() != 21) continue;
-            //cout << "AA indexParton23 = "<<indexParton23 << " id=" << event[indexParton23].id() <<endl;
+	    // kill all quarks
+	    //if( event[indexParton23].statusAbs() != 23 || event[indexParton23].id() != 21) continue;
+	    //cout << "AA indexParton23 = "<<indexParton23 << " id=" << event[indexParton23].id() <<endl;
 
-            //RAA - try to filter out the low energy partons to get RAA
-            /*
-               if( event[indexParton23].statusAbs() == 23){
-               double pT23   = event[indexParton23].pT();
-            //double RAA = 0.0123902 +  0.0143046*pT23 - 0.000109241*pT23*pT23;
-            double RAA = 0.02 +  0.005*pT23;  /// 0.15 0.005
-            //cout.precision(5); cout<<1.0001 <<" "<< unif->Rndm() <<endl; 
-            if(random > RAA) return;
-            }
-            */
-        }
+	    //RAA - try to filter out the low energy partons to get RAA
+	    /*
+	       if( event[indexParton23].statusAbs() == 23){
+	       double pT23   = event[indexParton23].pT();
+	    //double RAA = 0.0123902 +  0.0143046*pT23 - 0.000109241*pT23*pT23;
+	    double RAA = 0.02 +  0.005*pT23;  /// 0.15 0.005
+	    //cout.precision(5); cout<<1.0001 <<" "<< unif->Rndm() <<endl; 
+	    if(random > RAA) return;
+	    }
+	     */
+	}
 
-        // charge pion +-211
-        if(fabs(event[partIdx].id())==211) histos->hChargedPion[filtering]->Fill(event[partIdx].pT());
-        // proton = 2212 
-        if(event[partIdx].id()==2212) {
-            histos->hProton[filtering]->Fill(event[partIdx].pT());
-            //cout << event[partIdx].pT() <<endl; 
-        }
-
-        if(pTtBin>=0) new(triggList[triggList.GetEntriesFast()]) TLorentzVector(lvParticle); 
-        if(pTaBin>=0) new(assocList[assocList.GetEntriesFast()]) TLorentzVector(lvParticle); 
+	// charge pion +-211
+	if(fabs(event[partIdx].id())==211) histos->hChargedPion[filtering]->Fill(event[partIdx].pT());
+	// proton = 2212 
+	if(event[partIdx].id()==2212) {
+		histos->hProton[filtering]->Fill(event[partIdx].pT());
+		//cout << event[partIdx].pT() <<endl; 
+	}
     }
 }
 
