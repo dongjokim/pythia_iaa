@@ -23,6 +23,7 @@ void JParticleTools::GetParticles( int filtering ){
 		AliJBaseTrack track( lvParticle );
 		track.SetID(event[partIdx].id());
 		track.SetParticleType(kJHadron);
+		track.SetCharge(event[partIdx].charge());
 		track.SetTrackEff(1.);
 
 		// particle originated from gluon removed
@@ -60,6 +61,7 @@ void JParticleTools::GetParticles( int filtering ){
 				double pT23   = parton23.Pt();
 				double pT71   = parton71.Pt();
 				double dr = parton71.DeltaR(parton23);
+				histos->hPartonDR->Fill(pT23,dr);
 
 				if(event[indexParton23].id() == 21){
 					histos->hGluonJet->Fill(pTPart); 

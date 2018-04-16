@@ -15,7 +15,7 @@ zVertBins               -10 10
 
 #mixing=========
 maxDCent                5   #   check the mix if cent bin too wide
-maxMixDMult		        100  #	assoc mult so far. Later ITS tracklets
+maxMixDMult		100  #	assoc mult so far. Later ITS tracklets
 EventPoolDepth          1000 #   one pool for cent
 
 #====================

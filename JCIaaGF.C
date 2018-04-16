@@ -87,7 +87,7 @@ int main(int argc, char **argv) {
 	JHistos *histos = new JHistos();
 	histos->CreateToyHistos();
 	JParticleTools *ptool  = new JParticleTools(event, histos);
-
+	
 	AliJIaaAna *fIaaAna;
 	fIaaAna = new AliJIaaAna( kFALSE );
 
@@ -98,6 +98,9 @@ int main(int argc, char **argv) {
 	fIaaAna->GetCard()->WriteCard(fout->GetDirectory("JCIaa"));
 	// ========================================================
 	double etaMaxCutForPart = 0.8;
+
+
+
 
 	int ieout = Nevt/20;
 	if (ieout<1) ieout=1;
@@ -117,7 +120,7 @@ int main(int argc, char **argv) {
 		fIaaAna->Init();
 		fIaaAna->SetTrackList(inputList);
 		fIaaAna->SetRunNumber(0);
-		fIaaAna->SetCentrality(1);
+		fIaaAna->SetCentrality(1.);
 		fIaaAna->SetZVertex(0.);
 		fIaaAna->UserExec();
 

@@ -38,7 +38,7 @@ AliJEventPool::AliJEventPool(AliJCard *cardin, AliJHistogramInterface *histosin,
     exit(0);
   }
   for(int ic=0;ic<fcard->GetNoOfBins(kCentrType);ic++){
-    cout<<"Mixing pool depth for icbin = "<< ic << " is " << fcard->GetEventPoolDepth(ic) <<" for <"<<kParticleTypeStrName[particle] <<"> and prototype "<<kParticleProtoType[particle]<<endl;
+    cout<<"Mixing pool depth for icbin = "<< ic << " is " << fcard->GetEventPoolDepth(ic) <<" for <"<<kParticleTypeStrName[particle] <<"> and prototype "<<kParticleBasicProtoType[particle]<<endl;
     if(fcard->GetEventPoolDepth(ic) > MAXNOEVENT ){
       cout<<"ERROR: Event pool depth exeed max="<<MAXNOEVENT<<" in AliJEventPool.h"<<endl;
       exit(0);
@@ -47,7 +47,7 @@ AliJEventPool::AliJEventPool(AliJCard *cardin, AliJHistogramInterface *histosin,
 
   for(int ic=0;ic<fcard->GetNoOfBins(kCentrType);ic++){
     for(int ie=0;ie<fcard->GetEventPoolDepth(ic); ie++){ 
-      fLists[ic][ie]  = new TClonesArray(kParticleProtoType[particle],1500);
+      fLists[ic][ie]  = new TClonesArray(kParticleBasicProtoType[particle],1500);
     }
     flastAccepted[ic] = -1; //to start from 0
     fwhereToStore[ic] = -1; //to start from 0
@@ -154,26 +154,11 @@ void AliJEventPool::AcceptList(TClonesArray *inList, float cent, float Z, float 
     fmult      [cBin][fwhereToStore[cBin]] = inMult;
 
     fLists[cBin][fwhereToStore[cBin]]->Clear();
-/*
+
     for(int i=0;i<inList->GetEntriesFast();i++){
-				if( fthisPoolType == kJPhoton || fthisPoolType == kJDecayphoton ){
-					AliJPhoton *tkp = (AliJPhoton*)inList->At(i);
-					new ((*fLists[cBin][fwhereToStore[cBin]])[i]) AliJPhoton(*tkp);
-				}
-				else if( fthisPoolType == kJPizero || fthisPoolType == kJEta ){
-					AliJPiZero *tkpz = (AliJPiZero*)inList->At(i);
-					new ((*fLists[cBin][fwhereToStore[cBin]])[i]) AliJPiZero(*tkpz);
-				}
-        else if ( fthisPoolType == kJHadronMC ){
-          AliJMCTrack *mcTrack = (AliJMCTrack*)inList->At(i);
-          new ((*fLists[cBin][fwhereToStore[cBin]])[i]) AliJMCTrack(*mcTrack);
-        }
-				else{
-					AliJTrack *tk3 = (AliJTrack*)inList->At(i);
-					new ((*fLists[cBin][fwhereToStore[cBin]])[i]) AliJTrack(*tk3);
-				}
+				AliJBaseTrack *tk3 = (AliJBaseTrack*)inList->At(i);
+				new ((*fLists[cBin][fwhereToStore[cBin]])[i]) AliJBaseTrack(*tk3);
     }
-*/
 
 }
 
