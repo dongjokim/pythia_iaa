@@ -2,7 +2,7 @@
 ############################
 
 PROG=`basename $0`
-if [ $# -ne 3 ]
+if [ $# -ne 4 ]
 then
     echo "Usage: $PROG [strig to describe kind of analysis e.g. xe, azim, etc] "
     exit;
@@ -12,13 +12,14 @@ function setenv(){ export $1=$2; }
 
 setenv pyconfigname $1
 setenv cardname $2
-setenv comment  $3
+setenv GluonFilter $3
+setenv comment  $4
 #################################
 # Output file locations
 #################################
 setenv Main_DIR     `pwd`
-setenv DoWhat       JCIaa
-setenv oname        JCIaa_pythia8230_pp2.76TeV_$comment
+setenv DoWhat       JCIaaGF
+setenv oname        JCIaaGF_pythia8230_pp2.76TeV_GF${GluonFilter}_$comment
 setenv Disk         `pwd`
 setenv OUT_ERRORS   $Disk/outputs/${oname}/errors
 setenv Out_DIR      $Disk/outputs/${oname}/data
@@ -26,7 +27,7 @@ setenv LOG_DIR      $Disk/outputs/${oname}/logs
 #################################
 # Need for serial job in sepeli(pbs)
 #################################
-setenv noFileToRun 100
+setenv noFileToRun 500
 #################################
 
 mkdir -p $OUT_ERRORS
@@ -48,7 +49,7 @@ export iseg=\$SLURM_ARRAY_TASK_ID
 sedN=\`expr \$sedN + \${iseg}\`
 export outfile=$Out_DIR/$DoWhat-\$sedN.root
 export Log=$LOG_DIR/$DoWhat-\$sedN.log
-./\${what} \$outfile \$sedN 1000000 $pyconfigname $cardname  >& \$Log
+./\${what} \$outfile \$sedN 1000000 $pyconfigname $cardname ${GluonFilter}  >& \$Log
 cd $Main_DIR
 EOF
 #\${what} \$outfile \$sedN 5000000 >& \$Log
