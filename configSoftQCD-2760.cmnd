@@ -1,14 +1,11 @@
-#Settings of Pythia 8 wrapper program
-Main:numberOfEvents = 100000      ! number of events to generate
-Main:timesToShow = 0              ! show how far along run is this many times
-Main:timesAllowErrors = 3         ! abort run after this many flawed events
-Main:showChangedSettings = on      ! print changed flags/modes/parameters
-Main:showChangedParticleData = on  ! print changed particle and decay data
+# Taken from http://mcplots.cern.ch/dat/pp/uemb-hard/nch-vs-dphi/atlas4-pt1/7000/pythia8/8.212/default.params
+# settings of Pythia 8 wrapper program
+Main:numberOfEvents = 100000          ! number of events to generate
 Next:numberShowEvent = 0           ! suppress full listing of first events
 
 # random seed
 Random:setSeed = on
-#Random:seed = 19
+Random:seed = 1
 
 # Beam parameter settings.
 Beams:idA = 2212                ! first beam, p = 2212, pbar = -2212
@@ -18,10 +15,9 @@ Beams:eCM = 2760               ! CM energy of collision
 
 
 # Minimum Bias process (as taken from one of pythia8 example)
-SoftQCD:minbias = on               ! minimum bias QCD processes
+SoftQCD:nonDiffractive = on               ! minimum bias QCD processes
 SoftQCD:singleDiffractive = on
 SoftQCD:doubleDiffractive = on
-#SoftQCD:highertwist = on
 
 # Process setup: min-bias
 # Use this for ordinary min-bias (assuming Rivet analysis
@@ -31,7 +27,7 @@ SoftQCD:doubleDiffractive = on
 
 # Set cuts
 # Use this for hard leading-jets in a certain pT window
-PhaseSpace:pTHatMin = 0   # min pT  # MUST BE OVER 0 FOR HT PROCESS
+PhaseSpace:pTHatMin = 0   # min pT
 PhaseSpace:pTHatMax = 7000   # max pT
 
 # Use this for hard leading-jets in a certain mHat window
