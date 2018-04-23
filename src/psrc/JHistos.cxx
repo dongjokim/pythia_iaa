@@ -37,6 +37,7 @@ void JHistos::CreateToyHistos(){
     hGG23       = new TH1D("hGG23", "from GG ", NXTBIN, LimL, LimH ); hGG->Sumw2();
     hQG23       = new TH1D("hQG23", "from QG ", NXTBIN, LimL, LimH ); hQG->Sumw2();
     hQQ23       = new TH1D("hQQ23", "from QQ ", NXTBIN, LimL, LimH ); hQQ->Sumw2();
+    hPartonDR   = new TH2D("hPartonDR","distance",500,0,100,200,0,1.5);
 
     cout<<"Histos done"<<endl;
 }
