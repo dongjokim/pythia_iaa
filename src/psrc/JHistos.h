@@ -52,6 +52,8 @@ class JHistos {
         // == Inclusive in constructor ==========================================
         TH1D *hChargedPtpp, *hChargedPtAA;
         TH1D *hChargedPion[2], *hProton[2];
+        TH1D *hChargedMidMult, *hChargedV0MMult;
+        TH1D *hChargedMidEta, *hChargedV0MEta;
         TH1D *hGluonJet, *hQuarkJet, *hGG, *hQG, *hQQ;
         TH1D *hGluonJet23, *hQuarkJet23, *hGG23, *hQG23, *hQQ23;
         TH1D *hZppInc, *hZAAInc;

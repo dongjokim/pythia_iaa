@@ -5,6 +5,7 @@
 #source /Users/djkim/alice/sw/osx_x86-64/ROOT/v6-10-08-1/bin/thisroot.sh
 #export FASTJET=$HOME/alice/fastjet/3.1.3/inst
 source ~/softwares/root_build/bin/thisroot.sh
+#export PYTHIA8=$HOME/softwares/pythia8309
 export PYTHIA8=$HOME/softwares/pythia8230
 
 

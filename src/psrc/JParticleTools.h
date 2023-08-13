@@ -35,22 +35,26 @@ class JParticleTools {
 
 				unif = new TRandom3();
 				fInputList = new TClonesArray("AliJBaseTrack", 1500 );
-				TrackEtaRange = 0.8;
+				fInputListWideEta = new TClonesArray("AliJBaseTrack", 1500 );
+				TrackEtaRange = 1.0;
 			}
 
 		void InitializeEvent(){
 			fInputList->Clear();
+			fInputListWideEta->Clear();
 			UniqueID=0;
 		}
 
-		void GetParticles(int = 0);
+		void GetParticles();
 		TClonesArray * GetInputList() const{return fInputList;}
+		TClonesArray * GetInputListWideEta() const{return fInputListWideEta;}
 
 		TRandom3 *unif;
 
 		int UniqueID;
 		TLorentzVector lvParticle;
 		TClonesArray *fInputList;  // tracklist
+		TClonesArray *fInputListWideEta;  // tracklist
 
 		Event &event;
 		JHistos *histos;
