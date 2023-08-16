@@ -1,4 +1,5 @@
 PROGRAM       = JCIaaGF
+#PROGRAM       = JCIaaGFAna
 
 version       = JTKT
 CXX           = g++
@@ -35,6 +36,7 @@ HDRS	+= $(HDRSDICT)	src/JCORRAN/Base/AliJRunTable.h \
 			src/psrc/JCard.h \
 			src/psrc/JHistos.h \
 			src/psrc/JParticleTools.h \
+			src/psrc/JTreeDataManager.h \
                         nanoDict.h
 
 

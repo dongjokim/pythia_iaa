@@ -17,12 +17,12 @@
 //______________________________________________________________________________
 JTreeDataManager::JTreeDataManager():
 	fChain(NULL), 
-	fTrackList(NULL), 
-	fEventHeader(NULL),
-	fEventHeaderList(NULL)
+	fTrackList(NULL)
+	//fEventHeader(NULL),
+	//fEventHeaderList(NULL)
 {
 	// constructor
-	fChain = new TChain("jTree");
+	fChain = new TChain("JCIaa/jTree");
 }
 
 //______________________________________________________________________________
@@ -42,11 +42,10 @@ void JTreeDataManager::RegisterList(TClonesArray* listToFill, TClonesArray* list
 	int noIn    = fTrackList->GetEntriesFast();
 	int counter = 0;
 	for(int ii=0;ii<noIn;ii++){ // loop for all tracks 
-		JBaseTrack *cgl = (JBaseTrack*)fTrackList->At(ii);
-		if(1
-		  ) {
+		AliJBaseTrack *cgl = (AliJBaseTrack*)fTrackList->At(ii);
+		if(1) {
 			cgl->SetID(ii);
-			new ((*listToFill)[counter++]) JBaseTrack(*cgl);
+			new ((*listToFill)[counter++]) AliJBaseTrack(*cgl);
 		}
 	}
 }
@@ -70,7 +69,7 @@ void JTreeDataManager::ChainInputStream(const char* infileList){
 
 	// Load Branch
 	fChain->SetBranchAddress("JTrackList", &fTrackList);
-	fChain->SetBranchAddress("JEventHeaderList", &fEventHeaderList);
+	//fChain->SetBranchAddress("JEventHeaderList", &fEventHeaderList);
 }
 
 

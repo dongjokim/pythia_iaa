@@ -11,7 +11,7 @@ Main:timesAllowErrors = 3          ! how many aborts before run stops
 ! 2) Settings related to output in init(), next() and stat().
 Init:showChangedSettings = on      ! list changed settings
 Init:showChangedParticleData = off ! list changed particle data
-Next:numberCount = 1000             ! print message every n events
+Next:numberCount = 100000             ! print message every n events
 Next:numberShowInfo = 1            ! print event information n times
 Next:numberShowProcess = 1         ! print process record n times
 Next:numberShowEvent = 0           ! print event record n times
@@ -25,8 +25,8 @@ Beams:eCM = 13000.                 ! CM energy of collision
 
 ! Example 1: QCD + prompt photon production; must set pTmin.
 HardQCD:all = on                   ! switch on all QCD jet + jet processes
-PromptPhoton:all = on              ! swich on gamma + jet and gamma + gamma
-PhaseSpace:pTHatMin = 50.          ! minimal pT scale in process
+#PromptPhoton:all = on              ! swich on gamma + jet and gamma + gamma
+#PhaseSpace:pTHatMin = 50.          ! minimal pT scale in process
 
 ! Example 2: t-tbar production.
 #Top:gg2ttbar = on                  ! g g -> t tbar
@@ -50,6 +50,5 @@ PhaseSpace:pTHatMin = 50.          ! minimal pT scale in process
 
 ! 6) Other settings. Can be expanded as desired.
 #Tune:preferLHAPDF = off            ! use internal PDFs when LHAPDF not linked
-Tune:pp = 14                        ! use the Monash 2013 tune by Peter Skands at al. [Ska14], to both e^+e^- and pp/pbarp data. The starting point for many later tunes. 
 ParticleDecays:limitTau0 = on      ! set long-lived particle stable ...
 ParticleDecays:tau0Max = 10        ! ... if c*tau0 > 10 mm

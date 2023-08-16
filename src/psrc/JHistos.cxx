@@ -13,10 +13,10 @@ void JHistos::CreateToyHistos(){
     int  bins = 240; 
     double lr = -9./20., ur = lr+2;
  
-    hChargedMidMult= new TH1D("hChargedMidMult"," ", 900, 0, 300); hChargedMidMult->Sumw2();
-    hChargedV0MMult= new TH1D("hChargedV0MMult"," ", 900, 0, 300); hChargedV0MMult->Sumw2();
-    hChargedMidEta= new TH1D("hChargedMidEta"," ", 100, -5., 5.); hChargedMidEta->Sumw2();
-    hChargedV0MEta= new TH1D("hChargedV0MEta"," ", 100, -5., 5.); hChargedV0MEta->Sumw2();
+    hChargedMidMult= new TH1D("hChargedMidMult"," ", 1200, 0, 300); hChargedMidMult->Sumw2();
+    hChargedV0MMult= new TH1D("hChargedV0MMult"," ", 1200, 0, 300); hChargedV0MMult->Sumw2();
+    hChargedMidEta= new TH1D("hChargedMidEta"," ", 200, -7., 7.); hChargedMidEta->Sumw2();
+    hChargedV0MEta= new TH1D("hChargedV0MEta"," ", 200, -7., 7.); hChargedV0MEta->Sumw2();
     hChargedPtpp= new TH1D("hChargedPtpp"," ", NBINS, LogBinsX ); hChargedPtpp->Sumw2();
     hChargedPtAA= new TH1D("hChargedPtAA"," ", NBINS, LogBinsX ); hChargedPtAA->Sumw2();
 

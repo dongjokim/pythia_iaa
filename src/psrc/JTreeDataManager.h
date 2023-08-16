@@ -30,8 +30,8 @@
 #include <TChain.h>
 #include <TClonesArray.h>
 
-#include  "JBaseTrack.h"
-#include  "JBaseEventHeader.h"
+#include  "../../src/JCORRAN/Base/AliJBaseTrack.h"
+#include  "../../src/JCORRAN/Base/AliJBaseEventHeader.h"
 
 class JTreeDataManager  {
 
@@ -47,13 +47,13 @@ class JTreeDataManager  {
 		// GETTER
 		TChain * GetChain(){ return fChain; };
 		int GetNEvents(){ return fChain->GetEntries(); } 
-        JBaseEventHeader * GetEventHeader(){ return fEventHeader; };
-        TClonesArray  *GetEventHeaderList(){ return fEventHeaderList; };
+        //AliJBaseEventHeader * GetEventHeader(){ return fEventHeader; };
+        //TClonesArray  *GetEventHeaderList(){ return fEventHeaderList; };
 
 	protected:
 		TChain * fChain;
 		TClonesArray  *fTrackList;
-		JBaseEventHeader * fEventHeader;
+		//AliJBaseEventHeader * fEventHeader;
 		TClonesArray  *fEventHeaderList;
 };
 

@@ -11,60 +11,28 @@
 #include <TStopwatch.h>
 #include "src/psrc/JHistos.h"
 #include "src/psrc/JParticleTools.h"
+#include "src/psrc/JTreeDataManager.h"
 
 
 // Configuration for Toy MC track generation //
 using namespace std;
-using namespace Pythia8;
 
 int main(int argc, char **argv) {
 
 	//==== Read arguments =====
-	if ( argc<5 ) {
+	if ( argc<2 ) {
 		cout<<"+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++"<<endl;
-		cout<<"+  "<<argv[0]<<" [outputFile] [Seed] [Nevt] [pythiaconfig] [card]"<<endl;
+		cout<<"+  "<<argv[0]<<" [inputlist][outputFile][card]"<<endl;
 		cout<<"+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++"<<endl;
 		cout << endl << endl;
 		exit(1);
 	}
 
-	char *outFile;
-	outFile   = argv[1];
-	int randomseed = atoi(argv[2]);
-	int Nevt = atoi(argv[3]);
+	char *inputfile = argv[1];
+	char *outputfile = argv[2];
+	char* cardName   = argv[3];
 
-	//PYTHIA 8-------------------------------------------
-	char* pythiaconfig  = argv[4];
-	char* cardName   = argv[5];
 
-	cout <<"Setting ....." << endl;
-	//---------------------
-	//Pythia initialization
-	//---------------------
-	Pythia pythia;   // Generator.
-	Event& event      = pythia.event;
-	ParticleData& pdt = pythia.particleData;
-
-	// Read in commands from external file.
-	pythia.readFile(pythiaconfig);
-
-	// Extract settings to be used in the main program.
-	int    nEvent  = pythia.mode("Main:numberOfEvents");
-	bool   showCS  = pythia.flag("Main:showChangedSettings");
-	bool   showCPD = pythia.flag("Main:showChangedParticleData");
-	//double energy  = pythia.mode("Beams:eCM");
-
-	cout<<"Events="<<nEvent <<" RNDM seed "<< randomseed << endl;
-
-	pythia.readString("Random:setSeed = on");
-	pythia.readString(Form("Random:seed=%02d",randomseed));
-	pythia.readString("Tune:pp = 14"); //! use the Monash 2013 tune by Peter Skands at al. [Ska14], to both e^+e^- and pp/pbarp data. The starting point for many later tunes.
-	// Initialize. Beam parameters set in .cmnd file.
-	//pythia.readString("ColourReconnection:reconnect = off");
-	pythia.init();
-	// List changed data.
-	if (showCS)  pythia.settings.listChanged();
-	if (showCPD) pdt.listChanged();
 	//PYTHIA 8-------------------------------------------
 
 	TStopwatch timer;
@@ -72,14 +40,13 @@ int main(int argc, char **argv) {
 
 	// Booking need histos & variables
 	// same as UserCreateOutputObjects()
-	TFile *fout = new TFile(outFile ,"recreate" );
+	TFile *fout = new TFile(outputfile ,"recreate" );
 	fout->mkdir("JCIaa");
 	fout->cd("JCIaa");
 
 	// Tree generation
-	TClonesArray *tracks = new TClonesArray("AliJBaseTrack",10000);
-	TTree *jTree = new TTree("jTree","Tree from ToyMC");
-	jTree->Branch("JTrackList",&tracks);
+	TClonesArray *inputList = new TClonesArray("AliJBaseTrack",10000);
+	JTreeDataManager* dmg = new JTreeDataManager();
 
 	// === Set up JCard ====
 	AliJCard *card = new AliJCard(cardName);
@@ -92,7 +59,12 @@ int main(int argc, char **argv) {
 	// Gluon Filtering part
 	JHistos *histos = new JHistos();
 	histos->CreateToyHistos();
-	JParticleTools *ptool  = new JParticleTools(event, histos);
+
+	//==== Read the Data files =====
+	dmg->ChainInputStream(inputfile);
+	//AliJBaseEventHeader *eventHeader;
+
+	int Nevt = dmg->GetNEvents();
 
 /*
 	AliJIaaAna *fIaaAna;
@@ -112,20 +84,17 @@ int main(int argc, char **argv) {
 	int MultMid = -999;
 	int MultV0M = -999; 
 	for(int ievt=0; ievt<Nevt; ievt++){
-		ptool->InitializeEvent();
-		if (!pythia.next()) continue;
-		//Start Analysis ==========================================
-		// Add Particles from pythia
-		ptool->GetParticles();
-		tracks->Clear();
+		dmg->LoadEvent(ievt);
+		//eventHeader  = dmg->GetEventHeader();
+		//cout << eventHeader->GetEventID() << endl;
+		//if(!dmg->IsGoodEvent()) continue;  // Vertex cut applied in IsGoodEvent and histo saved there too
+		inputList->Clear();
+		dmg->RegisterList(inputList, NULL);
 		MultMid = 0; 
 		MultV0M = 0;
-		TClonesArray *inputListWideEta = ptool->GetInputListWideEta();
-		TClonesArray *inputList = ptool->GetInputList();
-		int trackcount = 0;
-		for(int t=0; t<inputListWideEta->GetEntriesFast(); t++) {
-			AliJBaseTrack *trk = (AliJBaseTrack*)inputListWideEta->At(t);
-			new((*tracks)[trackcount++]) AliJBaseTrack(*trk);
+
+		for(int t=0; t<inputList->GetEntriesFast(); t++) {
+			AliJBaseTrack *trk = (AliJBaseTrack*)inputList->At(t);
 			if(TMath::Abs(trk->Eta())<1.0 && trk->Pt()>0.2) {
 				MultMid++; histos->hChargedMidEta->Fill(trk->Eta());
 			}
@@ -133,7 +102,7 @@ int main(int argc, char **argv) {
 				MultV0M++; histos->hChargedV0MEta->Fill(trk->Eta()); //  $2.8 < \eta < 5.1$ and $-3.7 < \eta < -1.7$, 	
 			}
 		}
-		if(ievt % ieout == 0)  cout << ievt << "\t" << int(float(ievt)/Nevt*100) << "%\t Ntrk="<< inputList->GetEntriesFast() <<":"<< tracks->GetEntriesFast()<< endl ;
+		if(ievt % ieout == 0)  cout << ievt << "\t" << int(float(ievt)/Nevt*100) << "%\t Ntrk="<< inputList->GetEntriesFast() << endl ;
 		histos->hChargedMidMult->Fill(MultMid);
 		histos->hChargedV0MMult->Fill(MultV0M);
 		//fIaaAna->Init();
@@ -143,7 +112,7 @@ int main(int argc, char **argv) {
 		//fIaaAna->SetZVertex(0.);
 		//fIaaAna->UserExec();
 		//fout->cd("JCIaa");
-		jTree->Fill();	
+
 
 		//
 		EventCounter++;
